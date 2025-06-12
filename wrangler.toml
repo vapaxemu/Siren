@@ -8,10 +8,12 @@ binding = "SIREN"
 id = "10e063f0d42f4b14ad26063a3c4f102f"
 
 [build]
-command = "cargo install worker-build && worker-build --release"
-
-[env.dev]
-build = { command = "cargo install worker-build && worker-build --dev" }
+command = """
+cargo build --release --target wasm32-unknown-unknown && \
+wasm-bindgen target/wasm32-unknown-unknown/release/siren.wasm --out-dir build && \
+wasm-opt --enable-bulk-memory -Oz -o build/siren_opt.wasm build/siren_bg.wasm
+"""
+upload_format = "modules"
 
 [vars]
 UUID = "b7f30c86-7bfe-49e3-babf-48a62f972d1f"
